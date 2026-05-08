@@ -6,7 +6,7 @@ const Flowers = ({ addToCart }) => {
   const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    fetch("https://vivisteria-production.up.railway.app/products")
+    fetch(`${import.meta.env.VITE_API_URL}/products`)
       .then((res) => res.json())
       .then((data) => setFlowers(data))
       .catch((err) => console.log(err));

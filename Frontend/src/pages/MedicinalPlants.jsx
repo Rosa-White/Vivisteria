@@ -9,7 +9,7 @@ const MedicinalPlants = ({ addToCart, cartCount }) => {
   const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    fetch("https://vivisteria-production.up.railway.app/medicinal-plants")
+    fetch(`${import.meta.env.VITE_API_URL}/medicinal-plants`)
       .then((res) => res.json())
       .then((data) => setPlants(data))
       .catch((err) => console.log(err));

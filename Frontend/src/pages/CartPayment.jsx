@@ -73,7 +73,7 @@ const CartPayment = ({
     };
 
     try {
-      await fetch("https://vivisteria-production.up.railway.app/orders", {
+      await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

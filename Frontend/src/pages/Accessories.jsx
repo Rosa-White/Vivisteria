@@ -8,7 +8,7 @@ const Accessories = ({ addToCart }) => {
   const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    fetch("https://vivisteria-production.up.railway.app/accessories")
+    fetch(`${import.meta.env.VITE_API_URL}/accessories`)
       .then((res) => res.json())
       .then((data) => setItems(data))
       .catch((err) => console.log(err));
