@@ -8,21 +8,17 @@ const Accessories = ({ addToCart }) => {
   const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    fetch("http://localhost:3000/accessories")
+    fetch("https://vivisteria-production.up.railway.app/accessories")
       .then((res) => res.json())
       .then((data) => setItems(data))
       .catch((err) => console.log(err));
   }, []);
 
-  /* =========================
-     NORMALIZER (IMPORTANT)
-  ========================= */
+  
   const clean = (val) =>
     val?.toLowerCase().trim();
 
-  /* =========================
-     FILTER LOGIC (FIXED)
-  ========================= */
+  
   const filteredItems =
     activeCategory === "all"
       ? items
@@ -31,9 +27,7 @@ const Accessories = ({ addToCart }) => {
             clean(item.category) === clean(activeCategory)
         );
 
-  /* =========================
-     QUANTITY HANDLERS
-  ========================= */
+  /*QUANTITY HANDLERS*/
 
   const increaseQty = (id) => {
     setQuantities((prev) => ({

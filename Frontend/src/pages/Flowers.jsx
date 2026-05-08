@@ -6,7 +6,7 @@ const Flowers = ({ addToCart }) => {
   const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    fetch("http://localhost:3000/products")
+    fetch("https://vivisteria-production.up.railway.app/products")
       .then((res) => res.json())
       .then((data) => setFlowers(data))
       .catch((err) => console.log(err));

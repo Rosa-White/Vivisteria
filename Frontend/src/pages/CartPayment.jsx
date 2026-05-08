@@ -73,7 +73,7 @@ const CartPayment = ({
     };
 
     try {
-      await fetch("http://localhost:5000/orders", {
+      await fetch("https://vivisteria-production.up.railway.app/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
