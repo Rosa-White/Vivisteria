@@ -8,10 +8,10 @@ import medicinalPlantModel from "./models/medicinalPlant.model.js";
 import loginModel from "./models/login.model.js";
 
 import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser';
-import jwt from 'jsonwebtoken';
 
-dotenv.config()
+dotenv.config();
+
+const app = express();
 
 /* =========================
    MIDDLEWARE
