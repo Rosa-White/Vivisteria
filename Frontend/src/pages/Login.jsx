@@ -8,6 +8,40 @@ const Login = () => {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
 
+  if (isLogin) {
+    fetch("http://localhost:5000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          setMessage(data.error);
+        } else {
+          setMessage("Login successful");
+        }
+      });
+  } else {
+    fetch("http://localhost:5000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password, name })
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          setMessage(data.error);
+        } else {
+          setMessage("Account created successfully");
+        }
+      });
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -30,6 +64,10 @@ const Login = () => {
       }
       setMessage("Account created successfully");
     }
+
+    setEmail("");
+    setPassword("");
+    setName("");
   };
 
   return (
@@ -50,6 +88,7 @@ const Login = () => {
             placeholder="Full Name"
             className="w-full p-2 mb-3 border rounded"
             value={name}
+            required
             onChange={(e) => setName(e.target.value)}
           />
         )}
@@ -59,6 +98,7 @@ const Login = () => {
           placeholder="Email"
           className="w-full p-2 mb-3 border rounded"
           value={email}
+          required
           onChange={(e) => setEmail(e.target.value)}
         />
 
@@ -67,6 +107,7 @@ const Login = () => {
           placeholder="Password"
           className="w-full p-2 mb-4 border rounded"
           value={password}
+          required
           onChange={(e) => setPassword(e.target.value)}
         />
 

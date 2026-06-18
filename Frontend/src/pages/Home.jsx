@@ -203,7 +203,7 @@ const Home = () => {
               </h2>
 
               <p className="text-gray-600">
-                📞 +91 98765 43210
+                📞 +91 953006 XXXXX
               </p>
 
               <p className="text-gray-600 mt-2">

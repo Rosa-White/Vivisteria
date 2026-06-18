@@ -24,15 +24,15 @@ const CartPayment = ({
      CATEGORY CHECKS
   ========================= */
   const hasFlowers = cartItems.some(
-    (item) => item.category === "flower"
+    (item) => item.category === "products"
   );
 
   const hasBouquet = cartItems.some(
-    (item) => item.category === "bouquet"
+    (item) => item.category === "accessories"
   );
 
   const hasMedicinalPlant = cartItems.some(
-    (item) => item.category === "medicinal"
+    (item) => item.category === "medicinal-plants"
   );
 
   /* =========================
@@ -73,15 +73,26 @@ const CartPayment = ({
     };
 
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/orders`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
 
-      alert("Payment Successful 🛒");
+      if (!response.ok) {
+        throw new Error("Failed to place order");
+      }
+
+      const savedOrder = await response.json();
+
+      console.log(savedOrder);
+
+      alert("Payment Successful");
 
       setCartItems([]);
 
@@ -96,7 +107,7 @@ const CartPayment = ({
 
       <div className="max-w-7xl mx-auto">
 
-        {/* HEADER (SAME AS YOUR ORIGINAL) */}
+        {/* HEADER*/}
         <div className="flex justify-between items-center mb-10">
           <h1 className="text-5xl font-bold text-pink-600">
             Cart & Payment
@@ -243,24 +254,28 @@ const CartPayment = ({
                 type="text"
                 placeholder="Full Name"
                 className="w-full border border-pink-200 rounded-xl px-4 py-3"
+                required
               />
 
               <input
                 type="email"
                 placeholder="Email"
                 className="w-full border border-pink-200 rounded-xl px-4 py-3"
+                required
               />
 
               <textarea
                 rows="4"
                 placeholder="Address"
                 className="w-full border border-pink-200 rounded-xl px-4 py-3"
+                required
               />
 
               <input
                 type="text"
                 placeholder="Card Number"
                 className="w-full border border-pink-200 rounded-xl px-4 py-3"
+                required
               />
 
               {hasMedicinalPlant && (
@@ -276,6 +291,7 @@ const CartPayment = ({
                     }
                     placeholder="Enter ID"
                     className="w-full border rounded-xl px-4 py-3"
+                    required
                   />
                 </div>
               )}

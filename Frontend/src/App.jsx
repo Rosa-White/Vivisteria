@@ -9,6 +9,7 @@ import Accessories from "./pages/Accessories";
 import MedicinalPlants from "./pages/MedicinalPlants";
 import CartPayment from "./pages/CartPayment";
 import Login from "./pages/Login";
+import error from "./pages/error";
 
 export default function App() {
 
@@ -139,6 +140,8 @@ export default function App() {
           />
 
           <Route path="/login" element={<Login />} />
+
+          <Route path="*" element={<Error />} />
 
         </Routes>
 

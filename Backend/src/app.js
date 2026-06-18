@@ -5,8 +5,13 @@ import orderModel from "./models/order.model.js";
 import productModel from "./models/product.model.js";
 import accessoryModel from "./models/accessory.model.js";
 import medicinalPlantModel from "./models/medicinalPlant.model.js";
+import loginModel from "./models/login.model.js";
 
-const app = express();
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+import jwt from 'jsonwebtoken';
+
+dotenv.config()
 
 /* =========================
    MIDDLEWARE
@@ -127,6 +132,33 @@ app.get("/orders", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+});
+
+// LOGIN
+app.post("/api/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const validEmail = await loginModel.findOne({ email });
+
+  if (!validEmail) {
+    return res.json({ error: "Invalid email" });
+  }
+  if (validEmail.password !== password) {
+    return res.json({ error: "Invalid password" });
+  }
+  res.json({ message: "Login successful" });
+});
+
+// SIGNUP
+app.post("/api/signup", async (req, res) => {
+  const { name, email, password } = req.body;
+  const existingEmail = await loginModel.findOne({ email });
+
+  if (existingEmail) {
+    return res.json({ error: "Email already exists" });
+  }
+  const newUser = await loginModel.create({ name, email, password });
+  res.json({ message: "Account created successfully", user: newUser });
 });
 
 export default app;

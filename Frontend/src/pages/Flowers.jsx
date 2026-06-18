@@ -112,7 +112,7 @@ const Flowers = ({ addToCart }) => {
                   className="w-full bg-pink-500 text-white py-4 rounded-2xl mt-6"
                 >
                   Add To Cart
-                </button>
+                </button>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 
               </div>
 
