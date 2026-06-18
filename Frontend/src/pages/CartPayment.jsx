@@ -82,14 +82,14 @@ const CartPayment = ({
       <div className="max-w-7xl mx-auto">
 
         {/* HEADER*/}
-        <div className="flex justify-between items-center mb-10">
-          <h1 className="text-5xl font-bold text-pink-600">
+        <div className="flex justify-between items-center gap-3 mb-10">
+          <h1 className="text-3xl md:text-5xl font-bold text-pink-600">
             Cart & Payment
           </h1>
 
           <Link
             to="/flowers"
-            className="bg-white px-6 py-3 rounded-2xl text-lg font-semibold shadow-md"
+            className="bg-white px-4 md:px-6 py-3 rounded-2xl text-sm md:text-lg font-semibold shadow-md text-center whitespace-nowrap"
           >
             Back To Shop
           </Link>
@@ -118,13 +118,13 @@ const CartPayment = ({
               {cartItems.map((item) => (
                 <div
                   key={item._id}
-                  className="flex gap-5 bg-pink-50 p-4 rounded-2xl"
+                  className="flex flex-col sm:flex-row gap-5 bg-pink-50 p-4 rounded-2xl"
                 >
 
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-32 h-32 object-cover rounded-2xl"
+                    className="w-full sm:w-32 h-48 sm:h-32 object-cover rounded-2xl"
                   />
 
                   <div className="flex flex-col justify-center">
