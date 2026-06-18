@@ -1,18 +1,28 @@
 import { useEffect, useState } from "react";
 
-const Accessories = ({ addToCart }) => {
+const Accessories = ({
+  addToCart,
+  removeFromCart,
+  cartItems = [],
+  initialItems = [],
+}) => {
 
-  const [items, setItems] = useState([]);
+  const [fetchedItems, setFetchedItems] = useState([]);
   const [activeCategory, setActiveCategory] = useState("all");
 
   const [quantities, setQuantities] = useState({});
+  const items = initialItems.length > 0 ? initialItems : fetchedItems;
 
   useEffect(() => {
+    if (initialItems.length > 0) {
+      return;
+    }
+
     fetch(`${import.meta.env.VITE_API_URL}/accessories`)
       .then((res) => res.json())
-      .then((data) => setItems(data))
+      .then((data) => setFetchedItems(data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [initialItems]);
 
   
   const clean = (val) =>
@@ -44,6 +54,7 @@ const Accessories = ({ addToCart }) => {
   };
 
   const getQty = (id) => quantities[id] || 1;
+  const isInCart = (id) => cartItems.some((item) => item._id === id);
 
   return (
     <div className="min-h-screen bg-pink-50 p-6">
@@ -107,6 +118,9 @@ const Accessories = ({ addToCart }) => {
               <img
                 src={item.image}
                 alt={item.name}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
                 className="w-full h-72 object-cover"
               />
 
@@ -152,17 +166,26 @@ const Accessories = ({ addToCart }) => {
                   ₹{item.price}
                 </p>
 
-                {/* ADD TO CART */}
+                {/* ADD / REMOVE CART */}
                 <button
-                  onClick={() =>
+                  onClick={() => {
+                    if (isInCart(item._id)) {
+                      removeFromCart(item._id);
+                      return;
+                    }
+
                     addToCart({
                       ...item,
                       quantity: getQty(item._id),
-                    })
-                  }
-                  className="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-2xl mt-6"
+                    });
+                  }}
+                  className={`w-full text-white py-4 rounded-2xl mt-6 ${
+                    isInCart(item._id)
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-pink-500 hover:bg-pink-600"
+                  }`}
                 >
-                  Add To Cart
+                  {isInCart(item._id) ? "Remove From Cart" : "Add To Cart"}
                 </button>
 
               </div>

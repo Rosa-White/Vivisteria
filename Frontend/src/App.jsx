@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header";
@@ -13,6 +13,32 @@ import Login from "./pages/Login";
 export default function App() {
 
   const [cartItems, setCartItems] = useState([]);
+  const [catalog, setCatalog] = useState({
+    flowers: [],
+    accessories: [],
+    medicinalPlants: [],
+  });
+
+  useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+    Promise.all([
+      fetch(`${apiUrl}/products`).then((res) => res.json()),
+      fetch(`${apiUrl}/accessories`).then((res) => res.json()),
+      fetch(`${apiUrl}/medicinal-plants`).then((res) => res.json()),
+    ])
+      .then(([flowers, accessories, medicinalPlants]) => {
+        setCatalog({ flowers, accessories, medicinalPlants });
+
+        [...flowers, ...accessories, ...medicinalPlants].forEach((item) => {
+          if (item.image) {
+            const image = new Image();
+            image.src = item.image;
+          }
+        });
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   /* =========================
      ADD TO CART
@@ -100,7 +126,10 @@ export default function App() {
             element={
               <Flowers
                 addToCart={addToCart}
+                removeFromCart={removeFromCart}
+                cartItems={cartItems}
                 cartCount={cartItems.length}
+                initialFlowers={catalog.flowers}
               />
             }
           />
@@ -110,7 +139,10 @@ export default function App() {
             element={
               <Accessories
                 addToCart={addToCart}
+                removeFromCart={removeFromCart}
+                cartItems={cartItems}
                 cartCount={cartItems.length}
+                initialItems={catalog.accessories}
               />
             }
           />
@@ -120,7 +152,10 @@ export default function App() {
             element={
               <MedicinalPlants
                 addToCart={addToCart}
+                removeFromCart={removeFromCart}
+                cartItems={cartItems}
                 cartCount={cartItems.length}
+                initialPlants={catalog.medicinalPlants}
               />
             }
           />
@@ -133,7 +168,6 @@ export default function App() {
                 removeFromCart={removeFromCart}
                 increaseQty={increaseQty}
                 decreaseQty={decreaseQty}
-                setCartItems={setCartItems}
               />
             }
           />

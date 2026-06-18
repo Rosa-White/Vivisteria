@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -8,41 +8,7 @@ const Login = () => {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
 
-  if (isLogin) {
-    fetch("http://localhost:5000/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          setMessage(data.error);
-        } else {
-          setMessage("Login successful");
-        }
-      });
-  } else {
-    fetch("http://localhost:5000/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password, name })
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          setMessage(data.error);
-        } else {
-          setMessage("Account created successfully");
-        }
-      });
-  }
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -56,18 +22,43 @@ const Login = () => {
     }
 
     if (isLogin) {
-      setMessage("Login successful");
-    } else {
-      if (!name) {
-        setMessage("Please enter your name");
-        return;
-      }
-      setMessage("Account created successfully");
+      await submitAuth("/api/login", { email, password });
+      return;
     }
 
-    setEmail("");
-    setPassword("");
-    setName("");
+    if (!name) {
+      setMessage("Please enter your name");
+      return;
+    }
+
+    await submitAuth("/api/signup", { name, email, password });
+  };
+
+  const submitAuth = async (path, payload) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}${path}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        setMessage(data.error);
+        return;
+      }
+
+      setMessage(data.message);
+      setEmail("");
+      setPassword("");
+      setName("");
+    } catch (error) {
+      console.log(error);
+      setMessage("Something went wrong. Please try again.");
+    }
   };
 
   return (

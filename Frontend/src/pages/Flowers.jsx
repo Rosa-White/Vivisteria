@@ -1,16 +1,26 @@
 import { useEffect, useState } from "react";
 
-const Flowers = ({ addToCart }) => {
+const Flowers = ({
+  addToCart,
+  removeFromCart,
+  cartItems = [],
+  initialFlowers = [],
+}) => {
 
-  const [flowers, setFlowers] = useState([]);
+  const [fetchedFlowers, setFetchedFlowers] = useState([]);
   const [quantities, setQuantities] = useState({});
+  const flowers = initialFlowers.length > 0 ? initialFlowers : fetchedFlowers;
 
   useEffect(() => {
+    if (initialFlowers.length > 0) {
+      return;
+    }
+
     fetch(`${import.meta.env.VITE_API_URL}/products`)
       .then((res) => res.json())
-      .then((data) => setFlowers(data))
+      .then((data) => setFetchedFlowers(data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [initialFlowers]);
 
   /* =========================
      QUANTITY HANDLERS
@@ -31,6 +41,7 @@ const Flowers = ({ addToCart }) => {
   };
 
   const getQty = (id) => quantities[id] || 1;
+  const isInCart = (id) => cartItems.some((item) => item._id === id);
 
   return (
     <div className="min-h-screen bg-pink-50 p-6">
@@ -56,6 +67,9 @@ const Flowers = ({ addToCart }) => {
               <img
                 src={flower.image}
                 alt={flower.name}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
                 className="w-full h-72 object-cover"
               />
 
@@ -101,17 +115,26 @@ const Flowers = ({ addToCart }) => {
                   ₹{flower.price}
                 </p>
 
-                {/* ADD TO CART */}
+                {/* ADD / REMOVE CART */}
                 <button
-                  onClick={() =>
+                  onClick={() => {
+                    if (isInCart(flower._id)) {
+                      removeFromCart(flower._id);
+                      return;
+                    }
+
                     addToCart({
                       ...flower,
                       quantity: getQty(flower._id),
-                    })
-                  }
-                  className="w-full bg-pink-500 text-white py-4 rounded-2xl mt-6"
+                    });
+                  }}
+                  className={`w-full text-white py-4 rounded-2xl mt-6 ${
+                    isInCart(flower._id)
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-pink-500"
+                  }`}
                 >
-                  Add To Cart
+                  {isInCart(flower._id) ? "Remove From Cart" : "Add To Cart"}
                 </button>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 
               </div>

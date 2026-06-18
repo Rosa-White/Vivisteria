@@ -1,19 +1,19 @@
 import { Schema, model } from "mongoose";
 
 const loginSchema = new Schema({
-  fullname : {
+  name: {
     type: String,
     required: true,
-    },
-    email: {
+  },
+  email: {
     type: String,
     required: true,
     unique: true,   
-    },
-    password: {
+  },
+  password: {
     type: String,
     required: true,
-    },
+  },
 });
 
 const loginModel = model("Login", loginSchema);

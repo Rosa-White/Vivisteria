@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
-const MedicinalPlants = ({ addToCart, cartCount }) => {
+const MedicinalPlants = ({
+  addToCart,
+  removeFromCart,
+  cartItems = [],
+  initialPlants = [],
+}) => {
 
-  const [plants, setPlants] = useState([]);
+  const [fetchedPlants, setFetchedPlants] = useState([]);
+  const plants = initialPlants.length > 0 ? initialPlants : fetchedPlants;
 
   //  quantity state per plant
   const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
+    if (initialPlants.length > 0) {
+      return;
+    }
+
     fetch(`${import.meta.env.VITE_API_URL}/medicinal-plants`)
       .then((res) => res.json())
-      .then((data) => setPlants(data))
+      .then((data) => setFetchedPlants(data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [initialPlants]);
 
   /* =========================
      QUANTITY HANDLERS
@@ -34,6 +43,7 @@ const MedicinalPlants = ({ addToCart, cartCount }) => {
   };
 
   const getQty = (id) => quantities[id] || 1;
+  const isInCart = (id) => cartItems.some((item) => item._id === id);
 
   return (
     <div className="min-h-screen bg-green-50 p-6">
@@ -60,6 +70,9 @@ const MedicinalPlants = ({ addToCart, cartCount }) => {
               <img
                 src={plant.image}
                 alt={plant.name}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
                 className="w-full h-72 object-cover"
               />
 
@@ -105,17 +118,26 @@ const MedicinalPlants = ({ addToCart, cartCount }) => {
                   ₹{plant.price}
                 </p>
 
-                {/* ADD TO CART */}
+                {/* ADD / REMOVE CART */}
                 <button
-                  onClick={() =>
+                  onClick={() => {
+                    if (isInCart(plant._id)) {
+                      removeFromCart(plant._id);
+                      return;
+                    }
+
                     addToCart({
                       ...plant,
                       quantity: getQty(plant._id),
-                    })
-                  }
-                  className="w-full bg-green-600 text-white py-4 rounded-2xl mt-6"
+                    });
+                  }}
+                  className={`w-full text-white py-4 rounded-2xl mt-6 ${
+                    isInCart(plant._id)
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-green-600"
+                  }`}
                 >
-                  Add To Cart 
+                  {isInCart(plant._id) ? "Remove From Cart" : "Add To Cart"}
                 </button>
 
               </div>

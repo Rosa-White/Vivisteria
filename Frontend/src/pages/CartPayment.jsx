@@ -6,7 +6,6 @@ const CartPayment = ({
   removeFromCart,
   increaseQty,
   decreaseQty,
-  setCartItems,
 }) => {
 
   const [idNumber, setIdNumber] = useState("");
@@ -63,43 +62,18 @@ const CartPayment = ({
       return;
     }
 
-    const orderData = {
+    console.log({
       name: "User",
       email: "user@test.com",
       address: "User Address",
       items: cartItems,
       total: finalTotal,
       idNumber,
-    };
+    });
 
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/orders`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(orderData),
-        }
-      );
+    alert("Payment Successful");
 
-      if (!response.ok) {
-        throw new Error("Failed to place order");
-      }
-
-      const savedOrder = await response.json();
-
-      console.log(savedOrder);
-
-      alert("Payment Successful");
-
-      setCartItems([]);
-
-    } catch (err) {
-      console.log(err);
-      alert("Error placing order");
-    }
+    window.location.reload();
   };
 
   return (
